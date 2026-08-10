@@ -87,7 +87,7 @@ fn fake_agent_cli_script() -> String {
     #|if [ -n "${FAKE_AGENT_STDERR-}" ]; then
     #|  printf '%s' "$FAKE_AGENT_STDERR" >&2
     #|fi
-    #|if [ "${FAKE_AGENT_PAUSE-}" = "1" ]; then /bin/sleep 30; fi
+    #|if [ "${FAKE_AGENT_PAUSE-}" = "1" ]; then exec /bin/sleep 30; fi
     #|exit "${FAKE_AGENT_EXIT_CODE-0}"
     #|
   script
