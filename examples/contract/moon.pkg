@@ -1,0 +1,9 @@
+pkgtype(kind: "executable")
+
+supported_targets = "+native+js"
+
+import {
+  "totto2727/agent-core-sdk/cli",
+  "moonbitlang/core/json",
+  "moonbitlang/async",
+}

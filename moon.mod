@@ -4,7 +4,7 @@ version = "0.1.0"
 
 preferred_target = "native"
 
-supported_targets = "native"
+supported_targets = "+native+js"
 
 import {
   "moonbitlang/async@0.20.3",

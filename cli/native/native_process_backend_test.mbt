@@ -44,7 +44,7 @@ fn FakeAgentCli::invocation(
   self : FakeAgentCli,
   events : String,
   extra_environment : Map[String, String],
-) -> Invocation {
+) -> @cli.Invocation {
   let environment : Map[String, String] = {
     "PATH": "/usr/bin:/bin",
     "FAKE_AGENT_RECORD_DIR": self.record_directory,
@@ -53,13 +53,21 @@ fn FakeAgentCli::invocation(
   for key, value in extra_environment {
     environment[key] = value
   }
-  Invocation::new(
+  @cli.Invocation::new(
     command=self.executable,
     arguments=["run", "--format", "json"],
     input="Hello from stdin",
     environment~,
     inherit_environment=false,
   )
+}
+
+///|
+async fn[T : @json.FromJson] run(
+  invocation : @cli.Invocation,
+  on_event : async (T) -> Bool,
+) -> @cli.RunResult {
+  @cli.run_with_backend(invocation, backend(), on_event)
 }
 
 ///|
@@ -149,7 +157,7 @@ async test "run rejects malformed JSONL and terminates the child" {
       run(invocation, fn(_ : Json) { true }) |> ignore
       "no error"
     } catch {
-      AgentCliError::InvalidJson(line~, cause~) => "\{line}:\{cause}"
+      @cli.AgentCliError::InvalidJson(line~, cause~) => "\{line}:\{cause}"
       error => "unexpected: \{error}"
     }
     assert_true(message.has_prefix("{not-json:"))
@@ -171,7 +179,7 @@ async test "run rejects JSON events that do not match the requested type" {
       run(invocation, fn(_ : SequenceEvent) { true }) |> ignore
       "no error"
     } catch {
-      AgentCliError::InvalidJson(line~, cause~) => "\{line}:\{cause}"
+      @cli.AgentCliError::InvalidJson(line~, cause~) => "\{line}:\{cause}"
       error => "unexpected: \{error}"
     }
     assert_true(message.has_prefix("{\"unexpected\":true}:"))
