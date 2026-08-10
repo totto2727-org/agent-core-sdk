@@ -1,28 +1,38 @@
-# username/project
+# Agent Core SDK
 
-A simple MoonBit library project.
+`agent-core-sdk` provides shared infrastructure for MoonBit SDKs that integrate with agent runtimes.
 
-## Start a project
+The `cli` package owns the native process lifecycle for JSONL-emitting agent CLIs: stdin delivery, ordered JSONL parsing and typed decoding, stderr capture, exit status reporting, callback-requested termination, and cancellation-safe child cleanup. Provider SDKs remain responsible for building invocations, defining provider-specific event types, and aggregating turns.
 
-1. Create a repository with GitHub's **Use this template** button.
-2. Replace `username/project` and the repository URL in `moon.mod`.
-3. Update the module description, keywords, and `README.mbt.md`. `README.md` is a relative symbolic link to `README.mbt.md`, so edit only `README.mbt.md`.
-4. Add `MOONCAKES_TOKEN` as a repository secret when the module is ready to publish.
-
-## Target policy
-
-Leave `supported_targets` and `preferred_target` unset for synchronous, backend-neutral libraries.
-
-For libraries with async APIs, uncomment `supported_targets = "+native+js+wasm"` in `moon.mod` and select exactly one commented `preferred_target` in this order: `wasm`, `js`, then `native`. If a dependency supports fewer targets, narrow both settings to the dependency's supported targets.
-
-When selecting `js`, also uncomment `pkgs.nodejs` in `flake.nix`.
+The `server` directory is reserved for future server-side infrastructure and intentionally contains no implementation.
 
 ## Usage
 
 ```mbt check
-///|
-test {
-  inspect(@project.add(2, 3), content="5")
+struct Event {
+  message : String
+} derive(FromJson)
+
+async fn example() -> @cli.RunResult {
+  @cli.run(
+    @cli.Invocation::new(
+      command="agent",
+      arguments=["run", "--format", "json"],
+      input="Hello",
+    ),
+    async fn(event : Event) {
+      println(event.message)
+      true
+    },
+  )
+}
+```
+
+Add the package to a consumer's `moon.pkg`:
+
+```text
+import {
+  "totto2727/agent-core-sdk/cli",
 }
 ```
 
@@ -35,5 +45,6 @@ nix develop
 moon info
 moon check
 moon test
+moon build
 moon package --list
 ```

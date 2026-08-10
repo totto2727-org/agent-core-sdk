@@ -1,27 +1,23 @@
-name = "username/project"
+name = "totto2727/agent-core-sdk"
 
 version = "0.1.0"
 
+preferred_target = "native"
+
+supported_targets = "native"
+
+import {
+  "moonbitlang/async@0.20.3",
+}
+
 readme = "README.mbt.md"
 
-repository = "https://github.com/username/project"
+repository = "https://github.com/totto2727-org/agent-core-sdk"
 
 license = "MIT"
 
-keywords = [ "moonbit", "library" ]
+keywords = [ "agent", "cli", "jsonl", "sdk", "moonbit" ]
 
-description = "A simple MoonBit library"
+description = "Shared MoonBit process foundation for agent CLIs"
 
-// Leave both settings unset for synchronous, backend-neutral libraries.
-//
-// For async libraries, uncomment supported_targets and exactly one
-// preferred_target. Choose the first viable preferred target in this order:
-// wasm, js, native. If a dependency supports fewer targets, narrow both
-// settings to match that dependency.
-//
-// supported_targets = "+native+js+wasm"
-// preferred_target = "wasm"
-// preferred_target = "js"
-// preferred_target = "native"
-
-source = "./src"
+source = "."
