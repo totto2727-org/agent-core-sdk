@@ -20,4 +20,4 @@ keywords = [ "agent", "cli", "jsonl", "sdk", "moonbit" ]
 
 description = "Shared MoonBit process foundation for agent CLIs"
 
-source = "."
+source = "src"
