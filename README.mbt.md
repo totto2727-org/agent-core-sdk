@@ -6,6 +6,10 @@ The `cli` package owns the native process lifecycle for JSONL-emitting agent CLI
 
 The `server` directory is reserved for future server-side infrastructure and intentionally contains no implementation.
 
+## Targets
+
+The `cli` package uses one source and package layout for the `native` and `wasm` targets. `native` remains the preferred target because the package launches agent CLI processes through the asynchronous process API. JavaScript, WebAssembly GC, and LLVM are not supported targets.
+
 ## Usage
 
 ```mbt check
@@ -48,3 +52,5 @@ moon test
 moon build
 moon package --list
 ```
+
+CI runs the same validation for each supported target: `moon check --target <target>`, `moon test --target <target>`, `moon build --target <target>`, and `moon package --list`.

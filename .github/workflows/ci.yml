@@ -10,16 +10,23 @@ permissions:
 
 jobs:
   check:
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [native, wasm]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: totto2727-org/monorepo/.github/actions/setup-nix@main
-      - name: Verify MoonBit module
+      - name: Verify MoonBit module (${{ matrix.target }})
+        env:
+          MOON_TARGET: ${{ matrix.target }}
         run: |
           eval "$(nix print-dev-env "$GITHUB_WORKSPACE#default")"
           moon update
           moon info
-          moon check
-          moon test
+          moon check --target "$MOON_TARGET"
+          moon test --target "$MOON_TARGET"
+          moon build --target "$MOON_TARGET"
           moon package --list
