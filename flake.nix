@@ -1,5 +1,5 @@
 {
-  description = "A simple MoonBit library template";
+  description = "Shared MoonBit infrastructure for agent SDKs";
 
   inputs = {
     nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1";
