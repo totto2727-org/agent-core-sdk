@@ -40,7 +40,7 @@ import {
 }
 ```
 
-Consumers that provide another process implementation depend only on `cli` and construct a `ProcessBackend` with `ProcessBackend::new`. See `examples/contract` for an executable target-independent fixture.
+Consumers that provide another process implementation depend only on `cli` and construct a `ProcessBackend` with `ProcessBackend::new`. See `src/examples/contract` for an executable target-independent fixture.
 
 ## Target support
 
@@ -60,10 +60,10 @@ Enter the Nix development shell and run the standard MoonBit checks:
 nix develop
 moon info
 moon check --target native
-moon check --target js cli
+moon check --target js src/cli
 moon test --target native
-moon test --target js cli
+moon test --target js src/cli
 moon build --target native
-moon run --target js examples/contract
+moon run --target js src/examples/contract
 moon package --list
 ```
