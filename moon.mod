@@ -2,7 +2,7 @@ name = "totto2727/agent-core-sdk"
 
 version = "0.1.0"
 
-preferred_target = "native"
+preferred_target = "wasm"
 
 supported_targets = "+wasm+native"
 
