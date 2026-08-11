@@ -53,4 +53,4 @@ moon build
 moon package --list
 ```
 
-CI uses the shared MoonBit setup and check actions with their default Nix dev shell, then runs `moon package --list`. The workflow does not override the target, so these commands validate the preferred `native` target while the module continues to declare both `native` and `wasm` as supported targets.
+CI uses the shared MoonBit setup and check actions with their default Nix dev shell. The workflow does not override the target, so these actions validate the preferred `native` target while the module continues to declare both `native` and `wasm` as supported targets.

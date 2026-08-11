@@ -17,7 +17,3 @@ jobs:
       - uses: totto2727-org/monorepo/.github/actions/setup-nix@main
       - uses: totto2727-org/monorepo/.github/actions/setup-moonbit@main
       - uses: totto2727-org/monorepo/.github/actions/check-moonbit@main
-      - name: List MoonBit package contents
-        run: |
-          eval "$(nix print-dev-env "$GITHUB_WORKSPACE#default")"
-          moon package --list
