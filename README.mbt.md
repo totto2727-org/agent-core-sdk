@@ -6,6 +6,10 @@ The `cli` package owns the native process lifecycle for JSONL-emitting agent CLI
 
 The `server` directory is reserved for future server-side infrastructure and intentionally contains no implementation.
 
+## Targets
+
+The `cli` package uses one source and package layout for the `native` and `wasm` targets. `wasm` is the preferred target, and `native` remains supported. JavaScript, WebAssembly GC, and LLVM are not supported targets.
+
 ## Usage
 
 ```mbt check
@@ -48,3 +52,5 @@ moon test
 moon build
 moon package --list
 ```
+
+CI uses the shared MoonBit setup and check actions with their default Nix dev shell. The workflow does not override the target, so these actions validate the preferred `wasm` target while the module continues to declare both `native` and `wasm` as supported targets.
