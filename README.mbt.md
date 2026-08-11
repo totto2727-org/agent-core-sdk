@@ -53,4 +53,4 @@ moon build
 moon package --list
 ```
 
-CI runs the same validation for each supported target: `moon check --target <target>`, `moon test --target <target>`, `moon build --target <target>`, and `moon package --list`.
+CI validates the module with the preferred target by running `moon info`, `moon check`, `moon test`, `moon build`, and `moon package --list` without an explicit target override. The module continues to declare both `native` and `wasm` as supported targets.
