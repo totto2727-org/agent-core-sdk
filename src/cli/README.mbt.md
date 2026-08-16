@@ -26,7 +26,7 @@ async test "run streams a JSONL event" {
       arguments=["{\"message\":\"Hello\"}\\n"],
       input="",
     ),
-    fn(event : Event) {
+    fn(event : Event) raise {
       assert_eq(event.message, "Hello")
       true
     },

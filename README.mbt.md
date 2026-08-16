@@ -12,30 +12,15 @@ Add the module to a MoonBit project and import the package that owns the agent C
 moon add totto2727/agent-core-sdk@0.1.1
 ```
 
-```mbt check
-///|
-struct Event {
-  message : String
-} derive(FromJson)
+Declare `totto2727/agent-core-sdk/cli` in the consumer package's `moon.pkg`:
 
-///|
-async test "invoke the shared CLI package" {
-  let result = @cli.run(
-    @cli.Invocation::new(
-      command="/usr/bin/printf",
-      arguments=["{\"message\":\"Hello\"}\\n"],
-      input="",
-    ),
-    fn(event : Event) {
-      assert_eq(event.message, "Hello")
-      true
-    },
-  )
-  debug_inspect(result, content="Completed")
+```text
+import {
+  "totto2727/agent-core-sdk/cli",
 }
 ```
 
-Declare `totto2727/agent-core-sdk/cli` in the consumer package's `moon.pkg` and see the [CLI package guide](src/cli/README.mbt.md) for the complete invocation contract.
+See the [CLI package guide](src/cli/README.mbt.md) for the complete invocation contract and its checked usage example.
 
 ## Key features
 
