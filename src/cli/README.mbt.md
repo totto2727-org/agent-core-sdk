@@ -48,7 +48,7 @@ import {
 ## Key features
 
 - Streams ordered JSONL events and decodes them into a caller-provided `FromJson` type.
-- Captures stdin, stderr, exit status, callback-requested termination, and cancellation-safe child cleanup in one result contract.
+- Delivers stdin to the child and captures stderr for failed exits, alongside exit status, callback-requested termination, and cancellation-safe child cleanup in one result contract.
 - Supports the `wasm` preferred target and the `native` target with one target-neutral package layout.
 - Leaves provider-specific command construction, event models, and turn aggregation to provider SDKs.
 
