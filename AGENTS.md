@@ -19,7 +19,7 @@ README.md              Relative symlink to README.mbt.md
 
 - Run commands from the repository root.
 - Enter the pinned environment with `nix develop` before running MoonBit commands.
-- Keep the physical canonical README at `src/cli/README.mbt.md` and preserve the root `README.mbt.md -> src/cli/README.mbt.md -> README.md` relative symlink chain.
+- Keep the physical canonical README at `src/cli/README.mbt.md` and preserve the root `README.md -> README.mbt.md -> src/cli/README.mbt.md` relative symlink chain.
 - Validate the canonical README from the `src/cli` package because the module root has no `moon.pkg`.
 - Do not create `CLAUDE.md`; `AGENTS.md` is the repository's developer and agent guidance.
 - Read the `mbt-coding` and `mbt-test` skills before editing MoonBit production code or tests.
