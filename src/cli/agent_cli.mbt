@@ -1,5 +1,10 @@
 ///|
 /// A complete invocation of a JSONL-emitting agent CLI.
+///
+/// `command` and `arguments` select the executable and its arguments.
+/// `environment` adds or replaces variables, and `inherit_environment` controls
+/// whether the child receives the parent environment. `input` is written to the
+/// child's standard input before events are consumed.
 pub struct Invocation {
   command : String
   arguments : Array[String]
@@ -9,7 +14,11 @@ pub struct Invocation {
 }
 
 ///|
-/// Construct an agent CLI invocation.
+/// Construct an agent CLI invocation with optional environment configuration.
+///
+/// The default inherits the parent environment and applies no extra variables.
+/// Use `inherit_environment=false` with an explicit `PATH` when the child must
+/// run with a deterministic environment.
 pub fn Invocation::new(
   command~ : String,
   arguments~ : Array[String],
@@ -22,6 +31,10 @@ pub fn Invocation::new(
 
 ///|
 /// The process-level outcome of an agent CLI invocation.
+///
+/// `Completed` means the child exited with status zero, `Stopped` means the
+/// callback returned `false`, and `Failed` contains a nonzero exit code and the
+/// captured standard error text.
 pub enum RunResult {
   Completed
   Stopped
@@ -46,6 +59,10 @@ priv enum ChildExit {
 /// Returning `false` from `on_event` terminates the child and returns `Stopped`.
 /// A nonzero child exit is returned as `Failed`; process and callback errors are
 /// raised after all child resources have been cleaned up.
+///
+/// A typical call is `run(Invocation::new(command="agent", arguments=["run"],
+/// input="Hello"), async fn(event : Event) { handle(event); true })` where
+/// `Event` derives `FromJson`.
 pub async fn[T : @json.FromJson] run(
   invocation : Invocation,
   on_event : async (T) -> Bool,
