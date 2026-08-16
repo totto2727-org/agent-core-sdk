@@ -19,6 +19,7 @@ README.md            Relative symlink to README.mbt.md
 - Run commands from the repository root.
 - Enter the pinned environment with `nix develop` before running MoonBit commands.
 - Keep `README.mbt.md` canonical and preserve the relative `README.md -> README.mbt.md` symlink.
+- Validate the canonical README through the `src/cli/README.mbt.md -> ../../README.mbt.md` package-local symlink because the module root has no `moon.pkg`.
 - Do not create `CLAUDE.md`; `AGENTS.md` is the repository's developer and agent guidance.
 - Read the `mbt-coding` and `mbt-test` skills before editing MoonBit production code or tests.
 
@@ -30,7 +31,8 @@ README.md            Relative symlink to README.mbt.md
 - `moon test` — Run the module's MoonBit tests using its preferred `wasm` target.
 - `moon build` — Build the module using its preferred `wasm` target.
 - `moon package --list` — Confirm the packages and files that will be published.
-- `moon check README.mbt.md` — Validate the canonical README through MoonBit's literate Markdown entrypoint.
+- `(cd src/cli && moon check)` — Check the package-local canonical README symlink through MoonBit's literate Markdown entrypoint.
+- `(cd src/cli && moon test)` — Test the package-local canonical README symlink and CLI package tests.
 
 ## Architecture
 

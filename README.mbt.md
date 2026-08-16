@@ -17,18 +17,21 @@ struct Event {
   message : String
 } derive(FromJson)
 
-async fn example() -> @cli.RunResult {
-  @cli.run(
+async test "run streams a JSONL event" {
+  let received : Array[String] = []
+  let result = @cli.run(
     @cli.Invocation::new(
-      command="agent",
-      arguments=["run", "--format", "json"],
-      input="Hello",
+      command="/usr/bin/printf",
+      arguments=["{\"message\":\"Hello\"}\\n"],
+      input="",
     ),
-    async fn(event : Event) {
-      println(event.message)
+    fn(event : Event) {
+      received.push(event.message)
       true
     },
   )
+  debug_inspect(result, content="Completed")
+  assert_eq(received, ["Hello"])
 }
 ```
 
