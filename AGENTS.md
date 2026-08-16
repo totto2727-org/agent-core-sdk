@@ -8,8 +8,9 @@ src/cli/             JSONL agent CLI process lifecycle package
 src/server/          Reserved location for future server infrastructure
 flake.nix            Reproducible MoonBit development shell
 moon.mod             Module metadata and target policy
-README.mbt.md        Canonical end-user documentation
-README.md            Relative symlink to README.mbt.md
+src/cli/README.mbt.md  Physical canonical end-user documentation
+README.mbt.md          Relative symlink to src/cli/README.mbt.md
+README.md              Relative symlink to README.mbt.md
 ```
 
 ## Development commands
@@ -18,8 +19,8 @@ README.md            Relative symlink to README.mbt.md
 
 - Run commands from the repository root.
 - Enter the pinned environment with `nix develop` before running MoonBit commands.
-- Keep `README.mbt.md` canonical and preserve the relative `README.md -> README.mbt.md` symlink.
-- Validate the canonical README through the `src/cli/README.mbt.md -> ../../README.mbt.md` package-local symlink because the module root has no `moon.pkg`.
+- Keep the physical canonical README at `src/cli/README.mbt.md` and preserve the root `README.mbt.md -> src/cli/README.mbt.md -> README.md` relative symlink chain.
+- Validate the canonical README from the `src/cli` package because the module root has no `moon.pkg`.
 - Do not create `CLAUDE.md`; `AGENTS.md` is the repository's developer and agent guidance.
 - Read the `mbt-coding` and `mbt-test` skills before editing MoonBit production code or tests.
 
@@ -31,8 +32,8 @@ README.md            Relative symlink to README.mbt.md
 - `moon test` — Run the module's MoonBit tests using its preferred `wasm` target.
 - `moon build` — Build the module using its preferred `wasm` target.
 - `moon package --list` — Confirm the packages and files that will be published.
-- `(cd src/cli && moon check)` — Check the package-local canonical README symlink through MoonBit's literate Markdown entrypoint.
-- `(cd src/cli && moon test)` — Test the package-local canonical README symlink and CLI package tests.
+- `moon check README.mbt.md` — Check the root README symlink through MoonBit's literate Markdown entrypoint.
+- `moon test README.mbt.md` — Test the root README symlink through the `cli` package context.
 
 ## Architecture
 
