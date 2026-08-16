@@ -8,8 +8,8 @@ src/cli/             JSONL agent CLI process lifecycle package
 src/server/          Reserved location for future server infrastructure
 flake.nix            Reproducible MoonBit development shell
 moon.mod             Module metadata and target policy
-src/cli/README.mbt.md  Physical canonical end-user documentation
-README.mbt.md          Relative symlink to src/cli/README.mbt.md
+src/cli/README.mbt.md  Physical canonical CLI package guide
+README.mbt.md          Physical canonical module overview
 README.md              Relative symlink to README.mbt.md
 ```
 
@@ -19,8 +19,9 @@ README.md              Relative symlink to README.mbt.md
 
 - Run commands from the repository root.
 - Enter the pinned environment with `nix develop` before running MoonBit commands.
-- Keep the physical canonical README at `src/cli/README.mbt.md` and preserve the root `README.md -> README.mbt.md -> src/cli/README.mbt.md` relative symlink chain.
-- Validate the canonical README from the `src/cli` package because the module root has no `moon.pkg`.
+- Keep the root module overview physical at `README.mbt.md` and preserve the root `README.md -> README.mbt.md` relative symlink.
+- Keep the detailed CLI package guide physical at `src/cli/README.mbt.md`; it is owned by the `cli` package and has no second README alias.
+- Validate the root literate README with `moon check README.mbt.md` from the module root and validate the package guide with `(cd src/cli && moon check)`.
 - Do not create `CLAUDE.md`; `AGENTS.md` is the repository's developer and agent guidance.
 - Read the `mbt-coding` and `mbt-test` skills before editing MoonBit production code or tests.
 
@@ -32,8 +33,9 @@ README.md              Relative symlink to README.mbt.md
 - `moon test` — Run the module's MoonBit tests using its preferred `wasm` target.
 - `moon build` — Build the module using its preferred `wasm` target.
 - `moon package --list` — Confirm the packages and files that will be published.
-- `moon check README.mbt.md` — Check the root README symlink through MoonBit's literate Markdown entrypoint.
-- `moon test README.mbt.md` — Test the root README symlink through the `cli` package context.
+- `moon check README.mbt.md` — Check the physical module overview through MoonBit's literate Markdown entrypoint.
+- `(cd src/cli && moon check)` — Check the physical CLI package guide and package sources.
+- `(cd src/cli && moon test)` — Test the CLI package and its checked README example.
 
 ## Architecture
 
@@ -54,6 +56,12 @@ README.md              Relative symlink to README.mbt.md
 
 - `src/server` is reserved for future server-side infrastructure and currently contains no implementation.
 - Do not add provider-specific server behavior to `src/cli`.
+
+### Documentation ownership
+
+- The root `README.mbt.md` is the end-user module overview and links to the detailed `src/cli/README.mbt.md` package guide.
+- `src/cli/README.mbt.md` owns the CLI invocation contract and checked package usage example.
+- Keep package-only test dependencies in `src/cli/moon.pkg` under the `for "test"` import block; runtime imports remain in the package's main import block.
 
 ## Development tools
 

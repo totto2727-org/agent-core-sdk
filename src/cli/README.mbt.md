@@ -1,8 +1,8 @@
-# Agent Core SDK
+# Agent Core SDK CLI
 
-`agent-core-sdk` provides shared MoonBit infrastructure for SDKs that invoke agent runtimes through JSONL.
+The `totto2727/agent-core-sdk/cli` package runs an agent CLI as a child process, writes its stdin, decodes ordered JSONL events, captures failed-exit stderr, and reports the process outcome.
 
-This document provides the canonical `README.mbt.md` content; maintain `README.mbt.md -> src/cli/README.mbt.md` and `README.md -> README.mbt.md` as relative symlinks.
+This document is canonical `src/cli/README.mbt.md`.
 
 ## Usage
 
@@ -20,7 +20,6 @@ struct Event {
 
 ///|
 async test "run streams a JSONL event" {
-  let received : Array[String] = []
   let result = @cli.run(
     @cli.Invocation::new(
       command="/usr/bin/printf",
@@ -28,14 +27,15 @@ async test "run streams a JSONL event" {
       input="",
     ),
     fn(event : Event) {
-      received.push(event.message)
+      assert_eq(event.message, "Hello")
       true
     },
   )
   debug_inspect(result, content="Completed")
-  assert_eq(received, ["Hello"])
 }
 ```
+
+The callback receives events in stdout order. Return `true` to continue streaming or `false` to terminate the child and receive `Stopped`.
 
 Declare the package in a consumer's `moon.pkg`:
 
@@ -47,10 +47,11 @@ import {
 
 ## Key features
 
-- Streams ordered JSONL events and decodes them into a caller-provided `FromJson` type.
-- Delivers stdin to the child and captures stderr for failed exits, alongside exit status, callback-requested termination, and cancellation-safe child cleanup in one result contract.
-- Supports the `wasm` preferred target and the `native` target with one target-neutral package layout.
-- Leaves provider-specific command construction, event models, and turn aggregation to provider SDKs.
+- `Invocation` carries the command, arguments, environment overrides, inheritance policy, and stdin for one child process.
+- `run` decodes each JSONL line into the caller's `FromJson` type and invokes the callback once per event.
+- `RunResult` reports `Completed`, callback-requested `Stopped`, or `Failed(code~, stderr~)` for a nonzero exit.
+- Malformed JSONL and events that do not match the requested type raise `AgentCliError::InvalidJson` after child resources are cleaned up.
+- Provider SDKs remain responsible for provider-specific command arguments, event types, and turn aggregation.
 
 ## Prerequisites
 
@@ -67,13 +68,15 @@ moon add totto2727/agent-core-sdk@0.1.1
 
 2. Import `totto2727/agent-core-sdk/cli` from the package that invokes the agent CLI.
 
+3. Construct an `Invocation` with the child command and input, then await `run` with an event decoder and callback.
+
 ## API
 
 [Mooncakes `totto2727/agent-core-sdk/cli` API reference](https://mooncakes.io/docs/totto2727/agent-core-sdk/cli)
 
 ## Development
 
-See [AGENTS.md](../../AGENTS.md) for repository structure, target policy, and development commands.
+See [AGENTS.md](../../AGENTS.md) for repository structure, package ownership, target policy, and development commands.
 
 ## License
 
