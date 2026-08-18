@@ -1,38 +1,18 @@
 # Agent Core SDK
 
-`agent-core-sdk` provides shared infrastructure for MoonBit SDKs that integrate with agent runtimes.
+`totto2727/agent-core-sdk` is a MoonBit module that provides shared process infrastructure for SDKs invoking agent runtimes through JSONL.
 
-The `cli` package owns the native process lifecycle for JSONL-emitting agent CLIs: stdin delivery, ordered JSONL parsing and typed decoding, stderr capture, exit status reporting, callback-requested termination, and cancellation-safe child cleanup. Provider SDKs remain responsible for building invocations, defining provider-specific event types, and aggregating turns.
-
-The `server` directory is reserved for future server-side infrastructure and intentionally contains no implementation.
-
-## Targets
-
-The `cli` package uses one source and package layout for the `native` and `wasm` targets. `wasm` is the preferred target, and `native` remains supported. JavaScript, WebAssembly GC, and LLVM are not supported targets.
+This document is canonical `README.mbt.md`; maintain `README.md` as the relative symlink `README.md -> README.mbt.md`.
 
 ## Usage
 
-```mbt check
-struct Event {
-  message : String
-} derive(FromJson)
+Add the module to a MoonBit project and import the package that owns the agent CLI process lifecycle:
 
-async fn example() -> @cli.RunResult {
-  @cli.run(
-    @cli.Invocation::new(
-      command="agent",
-      arguments=["run", "--format", "json"],
-      input="Hello",
-    ),
-    async fn(event : Event) {
-      println(event.message)
-      true
-    },
-  )
-}
+```bash
+moon add totto2727/agent-core-sdk@0.1.1
 ```
 
-Add the package to a consumer's `moon.pkg`:
+Declare `totto2727/agent-core-sdk/cli` in the consumer package's `moon.pkg`:
 
 ```text
 import {
@@ -40,17 +20,40 @@ import {
 }
 ```
 
-## Development
+See the [CLI package guide](src/cli/README.mbt.md) for the complete invocation contract and its checked usage example.
 
-Enter the Nix development shell and run the standard MoonBit checks:
+## Key features
+
+- Provides one target-neutral `cli` package for invoking JSONL-emitting agent CLIs.
+- Supports the `wasm` preferred target and the `native` target declared by the module.
+- Keeps provider-specific command construction, event models, and turn aggregation in provider SDKs.
+- Publishes a generated [Mooncakes API reference](https://mooncakes.io/docs/totto2727/agent-core-sdk/cli) for the public package API.
+
+## Prerequisites
+
+- **MoonBit**: Install the MoonBit toolchain and `moon` command.
+- **Agent CLI**: Make the executable used by `cli.Invocation` available to the consumer process.
+
+## Setup
+
+1. Add the module to a MoonBit project.
 
 ```bash
-nix develop
-moon info
-moon check
-moon test
-moon build
-moon package --list
+moon add totto2727/agent-core-sdk@0.1.1
 ```
 
-CI uses the shared MoonBit setup and check actions with their default Nix dev shell. The workflow does not override the target, so these actions validate the preferred `wasm` target while the module continues to declare both `native` and `wasm` as supported targets.
+2. Import `totto2727/agent-core-sdk/cli` from the package that invokes the agent CLI.
+
+## API
+
+[Mooncakes `totto2727/agent-core-sdk/cli` API reference](https://mooncakes.io/docs/totto2727/agent-core-sdk/cli)
+
+## Development
+
+See [AGENTS.md](./AGENTS.md) for repository structure, package ownership, and development commands.
+
+## License
+
+[MIT](./LICENSE)
+
+_This README was generated from the [share-artifact skill](https://raw.githubusercontent.com/totto2727-org/agent/refs/heads/main/plugins/totto2727-coding/skills/share-artifact/SKILL.md) and [README template](https://raw.githubusercontent.com/totto2727-org/agent/refs/heads/main/plugins/totto2727-coding/skills/share-artifact/readme/template.md)._
