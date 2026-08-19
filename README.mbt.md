@@ -2,8 +2,6 @@
 
 `totto2727/agent-core-sdk` is a MoonBit module that provides shared process infrastructure for SDKs invoking agent runtimes through JSONL.
 
-This document is canonical `README.mbt.md`; maintain `README.md` as the relative symlink `README.md -> README.mbt.md`.
-
 ## Usage
 
 Run a JSONL-emitting command, observe the decoded event, and inspect its completion status:
