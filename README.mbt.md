@@ -6,17 +6,29 @@ This document is canonical `README.mbt.md`; maintain `README.md` as the relative
 
 ## Usage
 
-Add the module to a MoonBit project and import the package that owns the agent CLI process lifecycle:
+Run a JSONL-emitting command, observe the decoded event, and inspect its completion status:
 
-```bash
-moon add totto2727/agent-core-sdk@0.1.1
-```
-
-Declare `totto2727/agent-core-sdk/cli` in the consumer package's `moon.pkg`:
-
-```text
+```mbt check
+///|
 import {
-  "totto2727/agent-core-sdk/cli",
+  "totto2727/agent-core-sdk/cli" @cli,
+}
+
+///|
+async fn run_once() -> @cli.RunResult {
+  let result = @cli.run(
+    @cli.Invocation::new(
+      command="/usr/bin/printf",
+      arguments=["\"Hello\"\\n"],
+      input="",
+    ),
+    fn(message : String) raise {
+      assert_eq(message, "Hello")
+      true
+    },
+  )
+  debug_inspect(result, content="Completed")
+  result
 }
 ```
 
@@ -43,6 +55,12 @@ moon add totto2727/agent-core-sdk@0.1.1
 ```
 
 2. Import `totto2727/agent-core-sdk/cli` from the package that invokes the agent CLI.
+
+```text
+import {
+  "totto2727/agent-core-sdk/cli" @cli,
+}
+```
 
 ## API
 
