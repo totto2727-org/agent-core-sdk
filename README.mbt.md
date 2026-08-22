@@ -30,7 +30,7 @@ async fn run_once() -> @cli.RunResult {
 }
 ```
 
-See the [CLI package guide](src/cli/README.mbt.md) for the complete invocation contract and its checked usage example.
+See the [CLI package guide](src/cli/README.mbt.md) for its owned invocation contract, generated API, and direct checked-flow link.
 
 ## Key features
 
