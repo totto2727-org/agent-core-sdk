@@ -49,7 +49,7 @@ See the [CLI package guide](src/cli/README.mbt.md) for its owned invocation cont
 1. Add the module to a MoonBit project.
 
 ```bash
-moon add totto2727/agent-core-sdk@0.1.1
+moon add totto2727/agent-core-sdk@0.1.2
 ```
 
 2. Import `totto2727/agent-core-sdk/cli` from the package that invokes the agent CLI.
