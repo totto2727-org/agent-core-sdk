@@ -13,10 +13,12 @@ Consumer prerequisites, installation, imports, and the common `run` flow are doc
 - Malformed JSONL and incompatible events raise `AgentCliError::InvalidJson` after child resources are cleaned up.
 - Provider SDKs remain responsible for provider-specific arguments, event types, and turn aggregation.
 
-## Runnable examples
+## Usage
 
 See the [checked invocation flows](./agent_cli_test.mbt) for completion, callback stop, failed exits, invalid JSONL, environment handling, and cleanup behavior.
 
 ## API
 
 [Mooncakes API reference for `totto2727/agent-core-sdk/cli`](https://mooncakes.io/docs/totto2727/agent-core-sdk/cli)
+
+_This README was generated from the [share-artifact skill](https://raw.githubusercontent.com/totto2727-org/agent/refs/heads/main/plugins/totto2727-coding/skills/share-artifact/SKILL.md) and [README template](https://raw.githubusercontent.com/totto2727-org/agent/refs/heads/main/plugins/totto2727-coding/skills/share-artifact/readme/template.md)._
