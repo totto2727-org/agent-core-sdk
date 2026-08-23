@@ -9,7 +9,7 @@ This document is canonical `README.mbt.md`; maintain `README.md` as the relative
 Add the module to a MoonBit project and import the package that owns the agent CLI process lifecycle:
 
 ```bash
-moon add totto2727/agent-core-sdk@0.1.1
+moon add totto2727/agent-core-sdk@0.1.2
 ```
 
 Declare `totto2727/agent-core-sdk/cli` in the consumer package's `moon.pkg`:
@@ -39,7 +39,7 @@ See the [CLI package guide](src/cli/README.mbt.md) for the complete invocation c
 1. Add the module to a MoonBit project.
 
 ```bash
-moon add totto2727/agent-core-sdk@0.1.1
+moon add totto2727/agent-core-sdk@0.1.2
 ```
 
 2. Import `totto2727/agent-core-sdk/cli` from the package that invokes the agent CLI.

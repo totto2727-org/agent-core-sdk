@@ -28,15 +28,10 @@ async fn create_fake_agent_cli() -> FakeAgentCli {
 ///|
 async fn with_fake_agent_cli(run_test : async (FakeAgentCli) -> Unit) -> Unit {
   let fixture = create_fake_agent_cli()
-  run_test(fixture) catch {
-    error => {
-      @async.protect_from_cancel(async fn() {
-        @fs.rmdir(fixture.root, recursive=true)
-      })
-      raise error
-    }
-  }
-  @fs.rmdir(fixture.root, recursive=true)
+  defer @async.protect_from_cancel(async fn() {
+    @fs.rmdir(fixture.root, recursive=true)
+  })
+  run_test(fixture)
 }
 
 ///|

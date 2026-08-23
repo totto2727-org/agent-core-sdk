@@ -9,7 +9,7 @@ This document is canonical `src/cli/README.mbt.md`.
 Install the published module and import its CLI package:
 
 ```bash
-moon add totto2727/agent-core-sdk@0.1.1
+moon add totto2727/agent-core-sdk@0.1.2
 ```
 
 ```mbt check
@@ -63,7 +63,7 @@ import {
 1. Add the module to a MoonBit project.
 
 ```bash
-moon add totto2727/agent-core-sdk@0.1.1
+moon add totto2727/agent-core-sdk@0.1.2
 ```
 
 2. Import `totto2727/agent-core-sdk/cli` from the package that invokes the agent CLI.
