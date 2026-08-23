@@ -2,25 +2,30 @@
 
 `totto2727/agent-core-sdk` is a MoonBit module that provides shared process infrastructure for SDKs invoking agent runtimes through JSONL.
 
-This document is canonical `README.mbt.md`; maintain `README.md` as the relative symlink `README.md -> README.mbt.md`.
-
 ## Usage
 
-Add the module to a MoonBit project and import the package that owns the agent CLI process lifecycle:
+Run a JSONL-emitting command, observe the decoded event, and inspect its completion status:
 
-```bash
-moon add totto2727/agent-core-sdk@0.1.2
-```
-
-Declare `totto2727/agent-core-sdk/cli` in the consumer package's `moon.pkg`:
-
-```text
-import {
-  "totto2727/agent-core-sdk/cli",
+```moonbit
+///|
+async fn run_once() -> @cli.RunResult {
+  let result = @cli.run(
+    @cli.Invocation::new(
+      command="/usr/bin/printf",
+      arguments=["\"Hello\"\\n"],
+      input="",
+    ),
+    fn(message : String) raise {
+      assert_eq(message, "Hello")
+      true
+    },
+  )
+  debug_inspect(result, content="Completed")
+  result
 }
 ```
 
-See the [CLI package guide](src/cli/README.mbt.md) for the complete invocation contract and its checked usage example.
+See the [CLI package guide](src/cli/README.mbt.md) for its owned invocation contract, generated API, and direct checked-flow link.
 
 ## Key features
 
@@ -43,6 +48,12 @@ moon add totto2727/agent-core-sdk@0.1.2
 ```
 
 2. Import `totto2727/agent-core-sdk/cli` from the package that invokes the agent CLI.
+
+```text
+import {
+  "totto2727/agent-core-sdk/cli" @cli,
+}
+```
 
 ## API
 
