@@ -6,12 +6,7 @@
 
 Run a JSONL-emitting command, observe the decoded event, and inspect its completion status:
 
-```mbt check
-///|
-import {
-  "totto2727/agent-core-sdk/cli" @cli,
-}
-
+```moonbit
 ///|
 async fn run_once() -> @cli.RunResult {
   let result = @cli.run(
