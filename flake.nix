@@ -9,20 +9,24 @@
     };
   };
 
-  outputs = { nixpkgs, moonbit-overlay, ... }:
+  outputs =
+    { nixpkgs, moonbit-overlay, ... }:
     let
       supportedSystems = [
         "aarch64-darwin"
         "x86_64-linux"
       ];
       forEachSystem = nixpkgs.lib.genAttrs supportedSystems;
-      mkPkgs = system: import nixpkgs {
-        inherit system;
-        overlays = [ moonbit-overlay.overlays.default ];
-      };
+      mkPkgs =
+        system:
+        import nixpkgs {
+          inherit system;
+          overlays = [ moonbit-overlay.overlays.default ];
+        };
     in
     {
-      devShells = forEachSystem (system:
+      devShells = forEachSystem (
+        system:
         let
           pkgs = mkPkgs system;
         in
@@ -30,10 +34,13 @@
           default = pkgs.mkShell {
             packages = [
               pkgs.moonbit-bin.moonbit.latest
-              # Uncomment when preferred_target = "js" in moon.mod.
-              # pkgs.nodejs
             ];
+            shellHook = ''
+              # Enable Git Hook
+              vp config
+            '';
           };
-        });
+        }
+      );
     };
 }
