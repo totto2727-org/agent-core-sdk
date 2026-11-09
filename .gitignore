@@ -7,3 +7,4 @@ _build/
 trace.json
 .DS_Store
 result
+/tmp/
