@@ -1,6 +1,6 @@
 name = "totto2727/agent-core-sdk"
 
-version = "0.1.2"
+version = "0.1.3"
 
 preferred_target = "wasm"
 
