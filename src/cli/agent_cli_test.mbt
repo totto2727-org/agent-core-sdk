@@ -6,9 +6,10 @@ priv struct FakeAgentCli {
 }
 
 ///|
+#derive(FromJson)
 priv struct SequenceEvent {
-  sequence : Int
-} derive(FromJson)
+  sequence : Int32
+}
 
 ///|
 async fn create_fake_agent_cli() -> FakeAgentCli {
@@ -22,7 +23,7 @@ async fn create_fake_agent_cli() -> FakeAgentCli {
     create_mode=CreateOrTruncate,
   )
   @fs.chmod(executable, 0o755)
-  { root, executable, record_directory }
+  { root, executable, record_directory, }
 }
 
 ///|
@@ -39,7 +40,7 @@ fn FakeAgentCli::invocation(
   self : FakeAgentCli,
   events : String,
   extra_environment : Map[String, String],
-) -> Invocation {
+) -> @cli.Invocation {
   let environment : Map[String, String] = {
     "PATH": "/usr/bin:/bin",
     "FAKE_AGENT_RECORD_DIR": self.record_directory,
@@ -48,7 +49,7 @@ fn FakeAgentCli::invocation(
   for key, value in extra_environment {
     environment[key] = value
   }
-  Invocation::new(
+  @cli.Invocation::new(
     command=self.executable,
     arguments=["run", "--format", "json"],
     input="Hello from stdin",
@@ -58,7 +59,7 @@ fn FakeAgentCli::invocation(
 }
 
 ///|
-async fn process_is_running(pid : Int) -> Bool {
+async fn process_is_running(pid : Int32) -> Bool {
   let (code, _, _) = @process.collect_output("kill", ["-0", pid.to_string()])
   code == 0
 }
@@ -92,13 +93,14 @@ fn fake_agent_cli_script() -> String {
 async test "run decodes ordered JSON events and preserves invocation data" {
   with_fake_agent_cli(async fn(fixture) {
     let events = ["{\"sequence\":1}", "{\"sequence\":2}"].join("\n")
-    let received : Array[Int] = []
-    let result = run(fixture.invocation(events, { "CUSTOM_ENV": "custom" }), fn(
-      event : SequenceEvent,
-    ) {
-      received.push(event.sequence)
-      true
-    })
+    let received : Array[Int32] = []
+    let result = @cli.run(
+      fixture.invocation(events, { "CUSTOM_ENV": "custom" }),
+      fn(event : SequenceEvent) {
+        received.push(event.sequence)
+        true
+      },
+    )
     debug_inspect(result, content="Completed")
     debug_inspect(received, content="[1, 2]")
     let expected_arguments =
@@ -125,7 +127,7 @@ async test "run decodes ordered JSON events and preserves invocation data" {
 ///|
 async test "run returns nonzero exit status and stderr" {
   with_fake_agent_cli(async fn(fixture) {
-    let result = run(
+    let result = @cli.run(
       fixture.invocation("", {
         "FAKE_AGENT_STDERR": "agent failed",
         "FAKE_AGENT_EXIT_CODE": "17",
@@ -141,10 +143,10 @@ async test "run rejects malformed JSONL and terminates the child" {
   with_fake_agent_cli(async fn(fixture) {
     let invocation = fixture.invocation("{not-json", { "FAKE_AGENT_PAUSE": "1" })
     let message = try {
-      run(invocation, fn(_ : Json) { true }) |> ignore
+      @cli.run(invocation, fn(_ : Json) { true }) |> ignore
       "no error"
     } catch {
-      AgentCliError::InvalidJson(line~, cause~) => "\{line}:\{cause}"
+      @cli.AgentCliError::InvalidJson(line~, cause~) => "\{line}:\{cause}"
       error => "unexpected: \{error}"
     }
     assert_true(message.has_prefix("{not-json:"))
@@ -163,10 +165,10 @@ async test "run rejects JSON events that do not match the requested type" {
       "FAKE_AGENT_PAUSE": "1",
     })
     let message = try {
-      run(invocation, fn(_ : SequenceEvent) { true }) |> ignore
+      @cli.run(invocation, fn(_ : SequenceEvent) { true }) |> ignore
       "no error"
     } catch {
-      AgentCliError::InvalidJson(line~, cause~) => "\{line}:\{cause}"
+      @cli.AgentCliError::InvalidJson(line~, cause~) => "\{line}:\{cause}"
       error => "unexpected: \{error}"
     }
     assert_true(message.has_prefix("{\"unexpected\":true}:"))
@@ -181,7 +183,7 @@ async test "run rejects JSON events that do not match the requested type" {
 ///|
 async test "run stops the child when the callback returns false" {
   with_fake_agent_cli(async fn(fixture) {
-    let result = run(
+    let result = @cli.run(
       fixture.invocation("{\"sequence\":1}\n{\"sequence\":2}", {
         "FAKE_AGENT_PAUSE": "1",
       }),
@@ -203,7 +205,7 @@ async test "run cancellation terminates the child" {
     @async.with_task_group(async fn(group) {
       let task = group.spawn(
         async fn() {
-          run(
+          @cli.run(
             fixture.invocation("{\"started\":true}", { "FAKE_AGENT_PAUSE": "1" }),
             async fn(_ : Json) {
               started.put(())
@@ -226,7 +228,8 @@ async test "run cancellation terminates the child" {
         task.wait()
         false
       } catch {
-        error => @async.is_cancellation_error(error)
+        @async.WaitedTaskAlreadyCancelled => true
+        error => raise error
       }
       assert_true(cancelled)
       assert_false(process_is_running(pid))
