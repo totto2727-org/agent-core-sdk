@@ -1,13 +1,13 @@
 name = "totto2727/agent-core-sdk"
 
-version = "0.1.2"
+version = "0.1.3"
 
 preferred_target = "wasm"
 
 supported_targets = "+wasm+native"
 
 import {
-  "moonbitlang/async@0.21.0",
+  "moonbitlang/async@0.22.9",
 }
 
 readme = "README.mbt.md"

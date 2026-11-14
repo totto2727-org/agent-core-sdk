@@ -23,10 +23,10 @@ pub fn Invocation::new(
   command~ : String,
   arguments~ : Array[String],
   input~ : String,
-  environment? : Map[String, String] = Map([]),
-  inherit_environment? : Bool = true,
+  environment~ : Map[String, String] = Map([]),
+  inherit_environment~ : Bool = true,
 ) -> Invocation {
-  { command, arguments, environment, inherit_environment, input }
+  { command, arguments, environment, inherit_environment, input, }
 }
 
 ///|
@@ -35,21 +35,35 @@ pub fn Invocation::new(
 /// `Completed` means the child exited with status zero, `Stopped` means the
 /// callback returned `false`, and `Failed` contains a nonzero exit code and the
 /// captured standard error text.
+#derive(Debug, Eq)
 pub enum RunResult {
   Completed
   Stopped
-  Failed(code~ : Int, stderr~ : String)
-} derive(Debug, Eq)
+  Failed(code~ : Int32, stderr~ : String)
+}
+
+///|
+pub extend RunResult with @debug.Debug::{to_repr}
+
+///|
+pub extend RunResult with Eq::{not_equal, equal}
 
 ///|
 /// Errors raised while reading or decoding the JSONL protocol.
+#derive(Debug, Eq)
 pub suberror AgentCliError {
   InvalidJson(line~ : String, cause~ : String)
-} derive(Debug, Eq)
+}
+
+///|
+pub extend AgentCliError with @debug.Debug::{to_repr}
+
+///|
+pub extend AgentCliError with Eq::{not_equal, equal}
 
 ///|
 priv enum ChildExit {
-  Exited(Int)
+  Exited(Int32)
   CancelledForStop
 }
 
@@ -115,7 +129,7 @@ pub async fn[T : @json.FromJson] run(
         Exited(code)
       }
     } catch {
-      error if stop_requested.val && @async.is_cancellation_error(error) =>
+      @async.WaitedTaskAlreadyCancelled if stop_requested.val =>
         CancelledForStop
       error => raise error
     }
@@ -126,7 +140,8 @@ pub async fn[T : @json.FromJson] run(
     if exited_with_failure {
       stdout_task.cancel()
       stdout_task.wait() catch {
-        error => if !@async.is_cancellation_error(error) { raise error }
+        @async.WaitedTaskAlreadyCancelled => ()
+        error => raise error
       }
     } else {
       stdout_task.wait()
@@ -134,7 +149,8 @@ pub async fn[T : @json.FromJson] run(
     let stderr = if stop_requested.val {
       stderr_task.cancel()
       try stderr_task.wait() |> ignore catch {
-        error => if !@async.is_cancellation_error(error) { raise error }
+        @async.WaitedTaskAlreadyCancelled => ()
+        error => raise error
       }
       ""
     } else {
