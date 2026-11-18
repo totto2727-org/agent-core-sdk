@@ -152,7 +152,7 @@ async test "run rejects malformed JSONL and terminates the child" {
     assert_true(message.has_prefix("{not-json:"))
     let pid = @string.parse_int(
       @fs.read_file("\{fixture.record_directory}/pid").text().trim(),
-      base=10,
+      radix=10,
     )
     assert_false(process_is_running(pid))
   })
@@ -174,7 +174,7 @@ async test "run rejects JSON events that do not match the requested type" {
     assert_true(message.has_prefix("{\"unexpected\":true}:"))
     let pid = @string.parse_int(
       @fs.read_file("\{fixture.record_directory}/pid").text().trim(),
-      base=10,
+      radix=10,
     )
     assert_false(process_is_running(pid))
   })
@@ -192,7 +192,7 @@ async test "run stops the child when the callback returns false" {
     debug_inspect(result, content="Stopped")
     let pid = @string.parse_int(
       @fs.read_file("\{fixture.record_directory}/pid").text().trim(),
-      base=10,
+      radix=10,
     )
     assert_false(process_is_running(pid))
   })
@@ -220,7 +220,7 @@ async test "run cancellation terminates the child" {
       started.get()
       let pid = @string.parse_int(
         @fs.read_file(pid_path).text().trim(),
-        base=10,
+        radix=10,
       )
       assert_true(process_is_running(pid))
       task.cancel()
