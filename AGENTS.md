@@ -67,8 +67,8 @@ README.md              Relative symlink to README.mbt.md
 ## Development tools
 
 - **MoonBit**: Type-checks, tests, builds, and packages the module.
-- **Nix flakes**: Pin the MoonBit toolchain and provide reproducible local and CI environments.
-- **GitHub Actions**: Run the shared MoonBit checks and publication workflow.
+- **Nix flakes**: Pin the MoonBit SDK for local development.
+- **GitHub Actions**: Install the SDK through the shared MoonBit setup action, then run checks or publication.
 - **Mooncakes**: Hosts the published module and generated [`cli` API reference](https://mooncakes.io/docs/totto2727/agent-core-sdk/cli).
 
 ## Package-specific rules
