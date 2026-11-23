@@ -7,7 +7,7 @@ preferred_target = "wasm"
 supported_targets = "+wasm+native"
 
 import {
-  "moonbitlang/async@0.22.9",
+  "moonbitlang/async@0.22.10",
 }
 
 readme = "README.mbt.md"
